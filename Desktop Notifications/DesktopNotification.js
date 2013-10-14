@@ -1,17 +1,14 @@
-Ext.namespace('Zarafa.core.ui.notifier');
+Ext.namespace('Zarafa.plugins.desktop_notifications.js');
 
 /**
- * @class Zarafa.core.ui.notifier.DesktopNotification
+ * @class Zarafa.plugins.desktop_notifications.js.DesktopNotification
  * @singleton
  *
  * Singleton class to provide a wrapper for HTML5 desktop notifications feature
  */
-Zarafa.core.ui.notifier.DesktopNotification = (function() {
+Zarafa.plugins.desktop_notifications.js.DesktopNotification = (function() {
 	var notificationAPI = window.webkitNotifications || window.Notification;
-	var PERMISSION_DEFAULT = "default";
- 	var PERMISSION_GRANTED = "granted";
-	var PERMISSION_DENIED = "denied";
-	var PERMISSION = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED];
+	var PERMISSION = ['granted', 'default', 'denied'];
 
 	return {
 		/**
@@ -35,9 +32,11 @@ Zarafa.core.ui.notifier.DesktopNotification = (function() {
 				alert('Browser doesn\'t support notifications');
 			}
 
-			var permission = PERMISSION_DEFAULT;
+			var permission = 'default';
 			if(Ext.isFunction(notificationAPI.checkPermission)) {
 				permission = PERMISSION[notificationAPI.checkPermission()];
+			} else if (Ext.isFunction(notificationAPI.permissionLevel)) {
+				permission = notificationAPI.permissionLevel();
 			} else if (notificationAPI.permission) {
 				permission = notificationAPI.permission;
 			}
@@ -51,6 +50,8 @@ Zarafa.core.ui.notifier.DesktopNotification = (function() {
 
 		/**
 		 * Ask for permissions to show notifications
+		 * In chrome this function will only work when you call it based on some user action
+		 * like click of a button
 		 */
 		authorize : function(callback)
 		{
@@ -79,9 +80,9 @@ Zarafa.core.ui.notifier.DesktopNotification = (function() {
 			}
 
 			var notification;
-
-			if(Ext.isFunction(notificationAPI.createNotifications)) {
-				notification = notificationAPI.createNotifications(data.icon, title, data.body);
+// autoclose, handlers
+			if(Ext.isFunction(notificationAPI.createNotification)) {
+				notification = notificationAPI.createNotification(options.icon, title, options.body);
 				notification.show();
 			} else {
 				notification = new notificationAPI(title, {
