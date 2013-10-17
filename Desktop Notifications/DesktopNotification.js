@@ -13,6 +13,7 @@ Saket.html5.DesktopNotification = (function() {
 	return {
 		/**
 		 * Check if browser supports notifications API
+		 * @return {Boolean} true if browser supports desktop notifications else false
 		 */
 		supports : function()
 		{
@@ -25,6 +26,7 @@ Saket.html5.DesktopNotification = (function() {
 
 		/**
 		 * Check if browser has permissions to show notifications
+		 * @return {Boolean} true if permissions are granted to show desktop notifications else false
 		 */
 		hasPermission : function()
 		{
@@ -52,6 +54,8 @@ Saket.html5.DesktopNotification = (function() {
 		 * Ask for permissions to show notifications
 		 * In chrome this function will only work when you call it based on some user action
 		 * like click of a button
+		 * @param {Function} callback callback function that will be called after user has
+		 * granted/rejected permission request
 		 */
 		authorize : function(callback)
 		{
@@ -67,7 +71,14 @@ Saket.html5.DesktopNotification = (function() {
 		},
 
 		/**
-		 * Function will show a notification
+		 * Function will show a desktop notification
+		 * @param {String} title title to use when showing desktop notifications
+		 * @param {Object} options object containing below key value pairs to provide extra information
+		 * for the desktop notifications
+		 * 		- icon : icon to show in desktop notifications
+		 * 		- body : message to display
+		 *		- tag : tag to group same type of notifications so multiple notifications
+		 *				will not be showed multiple times
 		 */
 		notify : function(title, options)
 		{
